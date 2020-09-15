@@ -20,46 +20,26 @@ st.sidebar.header('Inventory Results')
 
 def user_input_features():
     clientnumber = st.sidebar.number_input(label='Client Number')
-    experimentID = st.sidebar.text_input(label='Experiment ID')
-    pain_length = st.sidebar.slider('Pain Interference Percentile',0.0,100.0,50.97)
-    movement_width = st.sidebar.slider('Physical Function and Mobility',0.0,100.0, 50.79)
-    headache_hx = st.sidebar.slider('Headache Hx', 0.0, 1.0,0.0)
-    migraine_hx = st.sidebar.slider('Migraine Hx', 0.0, 2.0,0.0)
-    Anxiety = st.sidebar.slider('Anxiety Percentile', 0.0, 100.0,48.6)
-    pain_intensity = st.sidebar.slider('Pain Intensity', 0.0,10.0,0.2)
-    Depression = st.sidebar.slider('Depression Percentile', 0.0, 100.0,46.06)
-    DHI_total = st.sidebar.slider('DHI Total', 0.0,100.0,5.9)
-    DHI_functional = st.sidebar.slider('DHI Functional', 0.0, 100.0,2.52)
-    visual_motor = st.sidebar.slider('Visual Motor Speed Composite', 0.0,60.0,37.544)
-    Reaction_time = st.sidebar.slider('Reaction Time Composite Score', 0.0,5.0,0.68)
-    memory = st.sidebar.slider('Memory Composite (Verbal) Score', 0.0, 100.0,89.8)
-    sleep = st.sidebar.slider('Sleep Disturbance Percentile', 0.0, 100.0,43.6)
-    social_roles = st.sidebar.slider('Ability to Participate in Social Roles Percentile', 0.0, 100.0,51.6)
-    cognition = st.sidebar.slider('Cognitive Function Percentile', 0.0, 100.0,32.8)
-    fatigue = st.sidebar.slider('Fatigue Percentile', 0.0, 100.0,48.2),
+    experimentID = st.sidebar.text_input(label='Experiment ID'),
 
-    data = {'Pain Interference Percentile': pain_length,
-            'Physical Function and Mobility': movement_width,
-            'Pain Intensity': pain_intensity,
-            'Headache Hx (0/1)\nno=0\nyes=1': headache_hx,
-            'Migrain Hx (None 0; Personal 1; Family 2)': migraine_hx,
-	    'Anxiety Percentile': Anxiety,
-	    'Depression Percentile': Depression, 
-            'DHI Total': DHI_total,
-	    'DHI Functional': DHI_functional, 
-            'Visual Motor Speed Composite':visual_motor,
-            'Reaction Time Composite Score': Reaction_time,
-            'Memory Composite (Verbal) Score': memory, 
-            'Sleep Disturbance Percentile': sleep, 
-            'Ability to Participate in Social Roles Percentile': social_roles,
-            'Cognitive Function Percentile': cognition,
-            'Fatigue Percentile': fatigue} 
+    #data = {'Experiment ID':experimentID,
+            #'Client Number':clientnumber} 
 
-    features = pd.DataFrame(data, index=[0])
-    return features
+    #features = pd.DataFrame(data, index=[0])
+    return experimentID, clientnumber
 
 df = user_input_features()
 
+#st.write(df)
+experimentid = df[0][0]
+#st.write(experimentid)
+
+dataset = pd.read_csv('ACCdatabase2.csv')
+experimentids = dataset['Experiment ID'].values
+combined = dataset[['Experiment ID','Headache Hx (0/1)\nno=0\nyes=1','Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)','Pain Interference Percentile','Pain Intensity','Physical Function and Mobility Percentile','Anxiety Percentile','Depression Percentile','DHI Total', 'DHI Functional','Visual Motor Speed Composite','Reaction Time Composite Score','Memory Composite (Verbal) Score','Sleep Disturbance Percentile','Ability to Participate in Social Roles Percentile','Cognitive Function Percentile','Fatigue Percentile']]
+dfnew1 = combined.loc[combined['Experiment ID'] == experimentid]
+dfnew = dfnew1.drop(columns = ['Experiment ID','Headache Hx (0/1)\nno=0\nyes=1','Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)'])
+#st.write(dfnew)
 #iris = datasets.load_iris()
 training_dataset = pd.read_csv('fulltraining.csv')
 Y = training_dataset['cluster'] 
@@ -88,7 +68,6 @@ from sklearn.metrics import confusion_matrix
 #st.write(s)
 #st.write(len(y_pred))
 
-dfnew = df.drop(columns = ['Headache Hx (0/1)\nno=0\nyes=1','Migrain Hx (None 0; Personal 1; Family 2)'])
 pred = knn_clf.predict(dfnew)
 #st.write(pred)
 
@@ -104,6 +83,7 @@ pred = knn_clf.predict(dfnew)
 
 #pred = clf.predict(df)
 prediction_proba = knn_clf.predict_proba(dfnew)
+
 test1 = np.empty(int(round(prediction_proba[0][0] * 100.)))
 test1.fill(0.)
 
@@ -119,66 +99,64 @@ test4.fill(3.)
 test5 = np.empty(int(round(prediction_proba[0][4] * 100.)))
 test5.fill(4.)
 
-total = list(test1) + list(test2) + list(test3) + list(test4) + list(test5)
-g = sns.distplot(total)
-ticks = ['S', 'MS', 'M', 'Mo', 'VS']
-g.set(xticks=[0,1,2,3,4])
-g.set(xticklabels=ticks)
 
-st.pyplot()
+#st.write(prediction_proba[0])
+#st.write(prediction_proba[0][0] * 100.)
 
-st.write(prediction_proba[0])
-st.write(prediction_proba[0][0] * 100.)
-
-st.header('Categorization')
+st.header('Your Critical Areas')
 counter = 0 
-st.subheader('Your Critical Areas')
-if df['Pain Interference Percentile'][0] > 50: 
+if dfnew['Pain Interference Percentile'].values > 50: 
     st.write('Pain')
     counter = counter + 1 
 
-if df['Physical Function and Mobility'][0] < 51: 
+#st.write(dfnew['Physical Function and Mobility Percentile'])
+
+if dfnew['Physical Function and Mobility Percentile'].values < 51: 
     st.write('Mobility')
     counter = counter + 1 
 
-if df['Anxiety Percentile'][0] > 48 or df['Depression Percentile'][0] > 46: 
+if dfnew['Anxiety Percentile'].values > 48 or dfnew['Depression Percentile'].values > 46: 
     st.write('Mood')
     counter = counter + 1 
 
-if df['DHI Total'][0] > 17: 
+if dfnew['DHI Total'].values > 17: 
     st.write('Dizziness')
     counter = counter + 1 
 
-if df['Visual Motor Speed Composite'][0] < 36: 
+if dfnew['Visual Motor Speed Composite'].values < 36: 
     st.write('Visual Motor Speed')
     counter = counter + 1 
 
-if df['Reaction Time Composite Score'][0] > 0.67: 
+if dfnew['Reaction Time Composite Score'].values > 0.67: 
     st.write('Reaction Time')
     counter = counter + 1 
 
-if df['Sleep Disturbance Percentile'][0] > 43: 
+if dfnew['Sleep Disturbance Percentile'].values > 43: 
     st.write('Sleep')
     counter = counter + 1 
 
-if df['Cognitive Function Percentile'][0] > 42: 
+if dfnew['Cognitive Function Percentile'].values > 42: 
     st.write('Cognitive')
     counter = counter + 1 
 
-if df['Fatigue Percentile'][0] > 48: 
+if dfnew['Fatigue Percentile'].values > 48: 
     st.write('Fatigue')
     counter = counter + 1 
 
-if df['Memory Composite (Verbal) Score'][0] < 80: 
+if dfnew['Memory Composite (Verbal) Score'].values < 80: 
     st.write('Memory')
     counter = counter + 1 
 #st.write(iris.target_names)
 
+st.header('Treatment Rx')
+st.write('Based on the inventories completed and information provided, the ConcussionRx algorithm has determined you fall in the following concussion subtype:')
 if pred == 0: 
     #st.write('Patient Classification: Concussion Sub-type 0')
     percentage = counter/10.0 * 100. 
-    st.subheader('Patient Classification: Severe Concussion')
-    st.write('Your symptoms are a ' + str(percentage) + '% match with the severe concussion symptoms')
+    st.subheader('Severe Concussion')
+    st.write('to a 96%'  + ' confidence interval.')
+
+
     st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
     st.markdown(
     '''<span style="color:red">
@@ -195,11 +173,24 @@ if pred == 0:
     ''',
     unsafe_allow_html=True
 )
+
+    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neurophysiology')
+    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.subheader('Physiotherapy:')
+    st.write('query cervical dysfunction, query occularmotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
+    st.subheader('Neurophysiology:')
+    st.write('query cognitive dysfunction')
+    st.subheader('Counseling:')
+    st.write('query emotional/mood dysfunction')
+    st.subheader('Occupational therapy:')
+    st.write('query ADLs function in school, work, home')
     
 if pred == 1: 
     percentage = counter/10.0 * 100.
-    st.subheader('Patient Classification: Moderately Severe concussion')
-    st.write('Your symptoms are a ' + str(percentage) + '% match with the moderately severe concussion symptoms')
+    st.subheader('Moderately Severe concussion')
+    st.write('to a 96%'  + ' confidence interval.')
+
     st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
     st.markdown(
     '''<span style="color:red">
@@ -217,11 +208,24 @@ if pred == 1:
     unsafe_allow_html=True
 )
 
+    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neurophysiology')
+    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.subheader('Physiotherapy:')
+    st.write('query cervical dysfunction, query occularmotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
+    st.subheader('Neurophysiology:')
+    st.write('query cognitive dysfunction')
+    st.subheader('counseling:')
+    st.write('query emotional/mood dysfunction')
+    st.subheader('Occupational therapy:')
+    st.write('query ADLs function in school, work, home')
+
     
 if pred == 2: 
     percentage = counter/5.0 * 100.
-    st.subheader('Patient Classification: Mild concussion')
-    st.write('Your symptoms are a ' + str(percentage) + '% match with the mild concussion symptoms')
+    st.subheader('Mild concussion')
+    st.write('to a 96'  + '%  confidence interval.')
+   
     st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
     st.markdown(
     '''<span style="color:red">
@@ -239,11 +243,21 @@ if pred == 2:
     unsafe_allow_html=True
 )
 
+    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.write('Physiotherapy,occupational therapy,kinesiology, counseling')
+    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.subheader('Physiotherapy:')
+    st.write('query cervical dysfunction, query autonomic dysfunction')
+    st.subheader('counseling:')
+    st.write('query emotional/mood dysfunction')
+    st.subheader('Occupational therapy:')
+    st.write('query ADLs function in school, work, home')
 
 if pred == 3: 
     percentage = counter/7.0 * 100.
-    st.subheader('Patient Classification: Moderate concussion')
-    st.write('Your symptoms are a ' + str(percentage) + '% match with the moderate concussion symptoms')
+    st.subheader('Moderate concussion')
+    st.write('to a 96'  + '%  confidence interval.')
+ 
     st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
     st.markdown(
     '''<span style="color:red">
@@ -261,11 +275,23 @@ if pred == 3:
     unsafe_allow_html=True
 )
 
+    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neurophysiology')
+    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.subheader('Physiotherapy:')
+    st.write('query cervical dysfunction, query vestibular dysfunction, query autonomic dysfunction')
+    st.subheader('Neurophysiology:')
+    st.write('query cognitive dysfunction')
+    st.subheader('counseling:')
+    st.write('query emotional/mood dysfunction')
+    st.subheader('Occupational therapy:')
+    st.write('query ADLs function in school, work, home')
 
 if pred == 4: 
     percentage = counter/10.0 * 100.
-    st.subheader('Patient Classification: Very Severe concussion')
-    st.write('Your symptoms are a ' + str(percentage) + '% match with the moderate concussion symptoms')
+    st.subheader('Very Severe concussion')
+    st.write('to a 96'  + '%  confidence interval.')
+   
     st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
     st.markdown(
     '''<span style="color:red">
@@ -275,10 +301,19 @@ if pred == 4:
     unsafe_allow_html=True
 )
 
+    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neurophysiology')
+    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.subheader('Physiotherapy:')
+    st.write('query cervical dysfunction, query occularmotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
+    st.subheader('Neurophysiology:')
+    st.write('query cognitive dysfunction')
+    st.subheader('counseling:')
+    st.write('query emotional/mood dysfunction')
+    st.subheader('Occupational therapy:')
+    st.write('query ADLs function in school, work, home')
 
 
-
-st.subheader('Based on your critical areas we recommend the following treatment:')
 
 #st.write(df)
 
@@ -290,24 +325,24 @@ st.subheader('Based on your critical areas we recommend the following treatment:
 st.header('Patient Summary')
 #st.write(df)
 
-st.subheader('Visual and Dizziness')
+st.subheader('Visual and Movement')
 fig = go.Figure()
 
 fig.add_trace(go.Indicator(
     mode = "number+delta",
-    value = df['Reaction Time Composite Score'][0],
+    value = dfnew['Reaction Time Composite Score'].values[0],
     domain = {'row': 0, 'column': 0}))
 
 fig.add_trace(go.Indicator(
     mode = "number+gauge+delta",
     gauge = {'shape': "bullet"},
     delta = {'reference': 30},
-    value = df['Visual Motor Speed Composite'][0],
+    value = dfnew['Visual Motor Speed Composite'].values[0],
     #domain = {'x': [0.1, 1], 'y': [0.2, 0.9]},
     title = {'text': "Visual Motor Speed", 'font': {'size': 12}},domain = {'row': 0, 'column': 1}))
 
 fig.add_trace(go.Indicator(
-    value = df['DHI Total'][0],
+    value = dfnew['DHI Total'].values[0],
     delta = {'reference': 0},
     title = {'text': "Dizziness", 'font': {'size': 12}},
     gauge = {
@@ -322,12 +357,10 @@ fig.add_trace(go.Indicator(
             {'range': [25,100], 'color': 'red'}]},
     domain = {'row': 1, 'column': 0}))
 
-
-
 fig.add_trace(go.Indicator(
-    value = df['Memory Composite (Verbal) Score'][0],
+    value = dfnew['Physical Function and Mobility Percentile'].values[0],
     delta = {'reference': 0},
-    title = {'text': "Verbal Memory", 'font': {'size': 12}},
+    title = {'text': "Physical Mobility", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
         'bar': {'color': "darkblue"},
@@ -335,10 +368,11 @@ fig.add_trace(go.Indicator(
         'borderwidth': 2,
         'bordercolor': "gray",
         'steps': [
-            {'range': [0, 15], 'color': 'green'},
-            {'range': [15,25], 'color': 'orange'},
-            {'range': [25,100], 'color': 'red'}]},
+            {'range': [0, 40], 'color': 'red'},
+            {'range': [40,60], 'color': 'orange'},
+            {'range': [60,100], 'color': 'green'}]},
     domain = {'row': 1, 'column': 1}))
+
 
 
 fig.update_layout(
@@ -354,11 +388,11 @@ fig.update_layout(
 
 st.plotly_chart(fig)
 
-st.subheader('Pain and Mobility')
+st.subheader('Pain and Sleep')
 fig = go.Figure()
 
 fig.add_trace(go.Indicator(
-    value = df['Pain Interference Percentile'][0],
+    value = dfnew['Pain Interference Percentile'].values[0],
     delta = {'reference': 0},
     title = {'text': "Pain", 'font': {'size': 12}},
     gauge = {
@@ -375,51 +409,7 @@ fig.add_trace(go.Indicator(
 
 
 fig.add_trace(go.Indicator(
-    value = df['Physical Function and Mobility'][0],
-    delta = {'reference': 0},
-    title = {'text': "Physical Mobility", 'font': {'size': 12}},
-    gauge = {
-        'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
-        'bgcolor': "white",
-        'borderwidth': 2,
-        'bordercolor': "gray",
-        'steps': [
-            {'range': [0, 40], 'color': 'red'},
-            {'range': [40,60], 'color': 'orange'},
-            {'range': [60,100], 'color': 'green'}]},
-    domain = {'row': 0, 'column': 1}))
-
-
-fig.add_trace(go.Indicator(
-    mode = "number+delta",
-    value = df['Headache Hx (0/1)\nno=0\nyes=1'][0],
-    domain = {'row': 1, 'column': 0}))
-
-fig.add_trace(go.Indicator(
-    mode = "number+delta",
-    title = {'text': "Migraine"},
-    value = df['Migrain Hx (None 0; Personal 1; Family 2)'][0],
-    domain = {'row': 1, 'column': 1}))
-
-fig.update_layout(
-    width = 700, 
-    height = 500,
-    grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
-    template = {'data' : {'indicator': [{
-        'title': {'text': "Headache"},
-        'mode' : "number+delta+gauge",
-        'delta' : {'reference': 0.0}}]
-                         }})
-
-st.plotly_chart(fig)
-
-st.subheader('Fatigue and Sleep')
-
-fig = go.Figure()
-
-fig.add_trace(go.Indicator(
-    value = df['Sleep Disturbance Percentile'][0],
+    value = dfnew['Sleep Disturbance Percentile'].values[0],
     delta = {'reference': 0},
     title = {'text': "Sleep Disturbance", 'font': {'size': 12}},
     gauge = {
@@ -432,12 +422,63 @@ fig.add_trace(go.Indicator(
             {'range': [0, 40], 'color': 'green'},
             {'range': [40,60], 'color': 'orange'},
             {'range': [60,100], 'color': 'red'}]},
-    domain = {'row': 0, 'column': 0}))
+    domain = {'row': 0, 'column': 1}))
+
+
 
 fig.add_trace(go.Indicator(
-    value = df['Fatigue Percentile'][0],
+    mode = "number+delta",
+    value = dfnew1['Headache Hx (0/1)\nno=0\nyes=1'].values[0],
+    domain = {'row': 1, 'column': 0}))
+
+fig.add_trace(go.Indicator(
+    mode = "number+delta",
+    title = {'text': "Migraine"},
+    value = dfnew1['Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)'].values[0],
+    domain = {'row': 1, 'column': 1}))
+
+
+
+
+fig.update_layout(
+    width = 700, 
+    height = 500,
+    grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
+    template = {'data' : {'indicator': [{
+        'title': {'text': "Headache"},
+        'mode' : "number+delta+gauge",
+        'delta' : {'reference': 0.0}}]
+                         }})
+
+
+
+st.plotly_chart(fig)
+
+st.subheader('Cognitive and Memory')
+
+fig = go.Figure()
+
+fig.add_trace(go.Indicator(
+    value = dfnew['Memory Composite (Verbal) Score'].values[0],
     delta = {'reference': 0},
-    title = {'text': "Fatigue", 'font': {'size': 12}},
+    title = {'text': "Verbal Memory", 'font': {'size': 12}},
+    gauge = {
+        'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
+        'bar': {'color': "darkblue"},
+        'bgcolor': "white",
+        'borderwidth': 2,
+        'bordercolor': "gray",
+        'steps': [
+            {'range': [0, 15], 'color': 'green'},
+            {'range': [15,25], 'color': 'orange'},
+            {'range': [25,100], 'color': 'red'}]},
+    domain = {'row': 0, 'column': 0}))
+
+
+fig.add_trace(go.Indicator(
+    value = dfnew['Cognitive Function Percentile'].values[0],
+    delta = {'reference': 0},
+    title = {'text': "Cognitive Impairment", 'font': {'size': 14}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
         'bar': {'color': "darkblue"},
@@ -449,6 +490,7 @@ fig.add_trace(go.Indicator(
             {'range': [40,60], 'color': 'orange'},
             {'range': [60,100], 'color': 'red'}]},
     domain = {'row': 0, 'column': 1}))
+
 
 fig.update_layout(
     width = 700, 
@@ -462,14 +504,16 @@ fig.update_layout(
 
 st.plotly_chart(fig)
 
-st.subheader('Cognitive and Mood')
+st.subheader('Mood and Activies of Daily Living')
 
 fig = go.Figure()
 
+
+
 fig.add_trace(go.Indicator(
-    value = df['Cognitive Function Percentile'][0],
+    value = dfnew['Fatigue Percentile'].values[0],
     delta = {'reference': 0},
-    title = {'text': "Cognitive Impairment", 'font': {'size': 14}},
+    title = {'text': "Fatigue", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
         'bar': {'color': "darkblue"},
@@ -482,8 +526,10 @@ fig.add_trace(go.Indicator(
             {'range': [60,100], 'color': 'red'}]},
     domain = {'row': 0, 'column': 0}))
 
+
+
 fig.add_trace(go.Indicator(
-    value = df['Anxiety Percentile'][0],
+    value = dfnew['Anxiety Percentile'].values[0],
     delta = {'reference': 0},
     title = {'text': "Anxiety", 'font': {'size': 14}},
     gauge = {
@@ -499,7 +545,7 @@ fig.add_trace(go.Indicator(
     domain = {'row': 0, 'column': 1}))
 
 fig.add_trace(go.Indicator(
-    value = df['Depression Percentile'][0],
+    value = dfnew['Depression Percentile'].values[0],
     delta = {'reference': 0},
     title = {'text': "Depression", 'font': {'size': 14}},
     gauge = {
@@ -515,7 +561,7 @@ fig.add_trace(go.Indicator(
     domain = {'row': 1, 'column': 0}))
 
 fig.add_trace(go.Indicator(
-    value = df['Ability to Participate in Social Roles Percentile'][0],
+    value = dfnew['Ability to Participate in Social Roles Percentile'].values[0],
     delta = {'reference': 0},
     title = {'text': "Social Life", 'font': {'size': 14}},
     gauge = {
@@ -544,6 +590,7 @@ fig.update_layout(
 st.plotly_chart(fig)
 
 st.header('Patient Progress')
+
 
 
 
