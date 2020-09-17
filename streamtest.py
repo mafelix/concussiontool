@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import seaborn as sns 
+import matplotlib.pyplot as plt 
 
 
 st.write("""
@@ -19,8 +20,8 @@ st.write("""
 st.sidebar.header('Inventory Results')
 
 def user_input_features():
-    clientnumber = st.sidebar.number_input(label='Client Number')
-    experimentID = st.sidebar.text_input(label='Experiment ID'),
+    clientnumber = st.sidebar.text_input(label='Client Number',value='1872')
+    experimentID = st.sidebar.text_input(label='Experiment ID',value='AC-0008'),
 
     #data = {'Experiment ID':experimentID,
             #'Client Number':clientnumber} 
@@ -32,6 +33,7 @@ df = user_input_features()
 
 #st.write(df)
 experimentid = df[0][0]
+clientnumber = df[1]
 #st.write(experimentid)
 
 dataset = pd.read_csv('ACCdatabase2.csv')
@@ -590,6 +592,61 @@ fig.update_layout(
 st.plotly_chart(fig)
 
 st.header('Patient Progress')
+
+outcomes = pd.read_csv('OutcomeMeasures.csv')
+dataset_client = outcomes.loc[outcomes['Client Number'] == clientnumber]
+s = np.arange(len(dataset_client['Anxiety'].values))
+newlist = dataset_client['timestamp'].values
+dates = [] 
+for item in newlist: 
+    dates.append(item.split()[0])
+
+mood = [] 
+anxiety = dataset_client['Anxiety'].values 
+depression = dataset_client['Depression'].values 
+
+if len(anxiety) == len(depression):
+    i = 0 
+    while i < len(anxiety): 
+        mood.append(max(anxiety[i],depression[i]))
+        i = i + 1 
+else: 
+    print "not enough data"
+
+
+sns.set()
+fig, ax = plt.subplots(4,1,sharex='col',figsize=(10,10))
+
+ax[0].scatter(s,mood)
+ax[0].plot(s,mood)
+ax[0].set_title('Client Number ' + clientnumber)
+#ax[0].set_title('Mood')
+ax[3].set_xticks(s)
+ax[3].set_xticklabels(dates)
+ax[3].set_xlabel('date')
+
+ax[0].set_ylabel('Mood')
+
+ax[1].scatter(s,dataset_client['Cognitive Function'].values)
+ax[1].plot(s,dataset_client['Cognitive Function'].values)
+#ax[0].set_title('Mood')
+ax[1].set_ylabel('Cognitive Impairment')
+
+ax[2].scatter(s,dataset_client['Pain Interferance'].values)
+ax[2].plot(s,dataset_client['Pain Interferance'].values)
+#ax[0].set_title('Mood')
+ax[2].set_ylabel('Pain')
+
+ax[3].scatter(s,dataset_client['Physical Function'].values)
+ax[3].plot(s,dataset_client['Physical Function'].values)
+#ax[0].set_title('Mood')
+ax[3].set_ylabel('Movement')
+
+
+st.write(fig)
+
+
+
 
 
 
