@@ -611,7 +611,7 @@ if len(anxiety) == len(depression):
         mood.append(max(anxiety[i],depression[i]))
         i = i + 1 
 else: 
-    print "not enough data"
+    print ("not enough data")
 
 
 sns.set()
