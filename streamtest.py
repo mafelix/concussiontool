@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 st.write("""
-# Concussion Sub-type classification
+# Concussion Sub-Type Classification
 """)
 
 st.sidebar.header('Inventory Results')
@@ -105,80 +105,46 @@ test5.fill(4.)
 #st.write(prediction_proba[0])
 #st.write(prediction_proba[0][0] * 100.)
 
-st.header('Your Critical Areas')
-counter = 0 
-if dfnew['Pain Interference Percentile'].values > 50: 
-    st.write('Pain')
-    counter = counter + 1 
 
-#st.write(dfnew['Physical Function and Mobility Percentile'])
-
-if dfnew['Physical Function and Mobility Percentile'].values < 51: 
-    st.write('Mobility')
-    counter = counter + 1 
-
-if dfnew['Anxiety Percentile'].values > 48 or dfnew['Depression Percentile'].values > 46: 
-    st.write('Mood')
-    counter = counter + 1 
-
-if dfnew['DHI Total'].values > 17: 
-    st.write('Dizziness')
-    counter = counter + 1 
-
-if dfnew['Visual Motor Speed Composite'].values < 36: 
-    st.write('Visual Motor Speed')
-    counter = counter + 1 
-
-if dfnew['Reaction Time Composite Score'].values > 0.67: 
-    st.write('Reaction Time')
-    counter = counter + 1 
-
-if dfnew['Sleep Disturbance Percentile'].values > 43: 
-    st.write('Sleep')
-    counter = counter + 1 
-
-if dfnew['Cognitive Function Percentile'].values > 42: 
-    st.write('Cognitive')
-    counter = counter + 1 
-
-if dfnew['Fatigue Percentile'].values > 48: 
-    st.write('Fatigue')
-    counter = counter + 1 
-
-if dfnew['Memory Composite (Verbal) Score'].values < 80: 
-    st.write('Memory')
-    counter = counter + 1 
-#st.write(iris.target_names)
 
 st.header('Treatment Rx')
-st.write('Based on the inventories completed and information provided, the ConcussionRx algorithm has determined you fall in the following concussion subtype:')
+st.write('According to your completed inventories and information provided, the ConcussionRx algorithm has classified your concussion as:')
 if pred == 0: 
     #st.write('Patient Classification: Concussion Sub-type 0')
-    percentage = counter/10.0 * 100. 
-    st.subheader('Severe Concussion')
-    st.write('to a 96%'  + ' confidence interval.')
+
+    st.markdown("<h1 style='text-align: center; color: black;'>Highly Complex</h1>", unsafe_allow_html=True)
+    #st.subheader('Severe Concussion')
+    #st.write('to a 96%'  + ' confidence interval.')
 
 
-    st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
+    st.write('This type of concussion complexity most often demonstrates with the following critical areas:')
     st.markdown(
     '''<span style="color:red">
-    Highly Critical Areas: pain, mobility, mood, cognition, sleep, dizziness, fatigue 
+    High Critical Areas: Pain, Mobility, Mood, Cognition, Sleep, Dizziness, Fatigue 
     </span>
     ''',
     unsafe_allow_html=True
 )
     st.markdown(
     '''
-    <span style="color:blue">
+    <span style="color:orange">
     Medium Critical Areas: Memory,Visual Motor Speed, Reaction Time
     </span>
     ''',
     unsafe_allow_html=True
 )
+    #st.write('These critical areas are some of the aspects that your Advance Concussion Team will assess, treat and recover:')
+    link = '[Advanced Concussion Team](https://www.advanceconcussion.com)'
+    st.markdown('These critical areas are some of the aspects that your '+ link +' will assess, treat and recover:', unsafe_allow_html=True)
 
-    st.header('Treatment recommended for this specific concussion sub-type includes:')
+
+    st.header('For Your Family Doctor: Treatment Recommendations:')
+    st.write('Your patient has completed the ConcussionRx, a clinical screening tool that evaluates the complexity of their concussion and accordingly, the required interdisplinary team needed to optimize patient treatment and recovery.')
+    st.write('This approach to concussion classification was developed through an artificial intelligence approach. Using robust statistical analyses, a 95% confidence interval and expert clinical and research consensus, your patient requires the following interdisciplinary team:')
     st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neuropsychology')
-    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+
+    st.write('The following assessments from each clinician are required:')
+
     st.subheader('Physiotherapy:')
     st.write('query cervical dysfunction, query occulormotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
     st.subheader('Neuropsychology:')
@@ -187,32 +153,43 @@ if pred == 0:
     st.write('query emotional/mood dysfunction')
     st.subheader('Occupational therapy:')
     st.write('query ADLs function in school, work, home')
+
+    link = '[Advanced Concussion Clinic](https://www.advanceconcussion.com)'
+    st.markdown('For more information on engaging an interdisplinary concussion team, please contact the '+ link, unsafe_allow_html=True)
+
+
+
     
 if pred == 1: 
-    percentage = counter/10.0 * 100.
-    st.subheader('Moderately Severe concussion')
-    st.write('to a 96%'  + ' confidence interval.')
 
-    st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
+    st.markdown("<h1 style='text-align: center; color: black;'>Moderately Complex</h1>", unsafe_allow_html=True)
+    #st.subheader('Moderately Severe concussion')
+    #st.write('to a 96%'  + ' confidence interval.')
+
+    st.write('This type of concussion complexity most often demonstrates with the following critical areas:')
     st.markdown(
     '''<span style="color:red">
-    Highly Critical Areas: pain, mobility, sleep, memory,fatigue, dizziness 
+    High Critical Areas: Pain, Mobility, Sleep, Memory,Fatigue, Dizziness 
     </span>
     ''',
     unsafe_allow_html=True
 )
     st.markdown(
     '''
-    <span style="color:blue">
-    Medium Critical Areas: visual motor speed, reaction time, cognition, mood 
+    <span style="color:orange">
+    Medium Critical Areas: Visual Motor Speed, Reaction Time, Cognition, Mood 
     </span>
     ''',
     unsafe_allow_html=True
 )
+    link = '[Advanced Concussion Team](https://www.advanceconcussion.com)'
+    st.markdown('These critical areas are some of the aspects that your '+ link +' will assess, treat and recover:', unsafe_allow_html=True)
 
-    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.header('For Your Family Doctor: Treatment Recommendations:')
+    st.write('Your patient has completed the ConcussionRx, a clinical screening tool that evaluates the complexity of their concussion and accordingly, the required interdisplinary team needed to optimize patient treatment and recovery.')
+    st.write('This approach to concussion classification was developed through an artificial intelligence approach. Using robust statistical analyses, a 95% confidence interval and expert clinical and research consensus, your patient requires the following interdisciplinary team:')
     st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neuropsychology')
-    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.write('The following assessments from each clinician are required:')
     st.subheader('Physiotherapy:')
     st.write('query cervical dysfunction, query occulormotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
     st.subheader('Neuropsychology:')
@@ -224,14 +201,15 @@ if pred == 1:
 
     
 if pred == 2: 
-    percentage = counter/5.0 * 100.
-    st.subheader('Mild concussion')
-    st.write('to a 96'  + '%  confidence interval.')
+    
+    st.markdown("<h1 style='text-align: center; color: black;'>Low Complex</h1>", unsafe_allow_html=True)
+    #st.subheader('Mild concussion')
+    #st.write('to a 96'  + '%  confidence interval.')
    
-    st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
+    st.write('This type of concussion complexity most often demonstrates with the following critical areas:')
     st.markdown(
     '''<span style="color:red">
-    Highly Critical Areas: pain
+    High Critical Areas: Pain
     </span>
     ''',
     unsafe_allow_html=True
@@ -239,15 +217,19 @@ if pred == 2:
     st.markdown(
     '''
     <span style="color:blue">
-    Medium Critical Areas: mobility, mood, sleep, fatigue 
+    Medium Critical Areas: Mobility, Mood, Sleep, Fatigue 
     </span>
     ''',
     unsafe_allow_html=True
 )
+    link = '[Advanced Concussion Team](https://www.advanceconcussion.com)'
+    st.markdown('These critical areas are some of the aspects that your '+ link +' will assess, treat and recover:', unsafe_allow_html=True)
 
-    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.header('For Your Family Doctor: Treatment Recommendations:')
+    st.write('Your patient has completed the ConcussionRx, a clinical screening tool that evaluates the complexity of their concussion and accordingly, the required interdisplinary team needed to optimize patient treatment and recovery.')
+    st.write('This approach to concussion classification was developed through an artificial intelligence approach. Using robust statistical analyses, a 95% confidence interval and expert clinical and research consensus, your patient requires the following interdisciplinary team:')
     st.write('Physiotherapy,occupational therapy,kinesiology, counseling')
-    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.write('The following assessments from each clinician are required:')
     st.subheader('Physiotherapy:')
     st.write('query cervical dysfunction, query autonomic dysfunction')
     st.subheader('counseling:')
@@ -256,30 +238,35 @@ if pred == 2:
     st.write('query ADLs function in school, work, home')
 
 if pred == 3: 
-    percentage = counter/7.0 * 100.
-    st.subheader('Moderate concussion')
-    st.write('to a 96'  + '%  confidence interval.')
+    
+    st.markdown("<h1 style='text-align: center; color: black;'>Complex</h1>", unsafe_allow_html=True)
+    #st.subheader('Moderate concussion')
+    #st.write('to a 96'  + '%  confidence interval.')
  
-    st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
+    st.write('This type of concussion complexity most often demonstrates with the following critical areas:')
     st.markdown(
     '''<span style="color:red">
-    Highly Critical Areas: pain, mobility, mood, sleep, fatigue 
+    High Critical Areas: Pain, Mobility, Mood, Sleep, Fatigue 
     </span>
     ''',
     unsafe_allow_html=True
 )
     st.markdown(
     '''
-    <span style="color:blue">
-    Medium Critical Areas: cognition, dizziness
+    <span style="color:orange">
+    Medium Critical Areas: Cognition, Dizziness
     </span>
     ''',
     unsafe_allow_html=True
 )
+    link = '[Advanced Concussion Team](https://www.advanceconcussion.com)'
+    st.markdown('These critical areas are some of the aspects that your '+ link +' will assess, treat and recover:', unsafe_allow_html=True)
 
-    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.header('For Your Family Doctor: Treatment Recommendations:')
+    st.write('Your patient has completed the ConcussionRx, a clinical screening tool that evaluates the complexity of their concussion and accordingly, the required interdisplinary team needed to optimize patient treatment and recovery.')
+    st.write('This approach to concussion classification was developed through an artificial intelligence approach. Using robust statistical analyses, a 95% confidence interval and expert clinical and research consensus, your patient requires the following interdisciplinary team:')
     st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neuropsychology')
-    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.write('The following assessments from each clinician are required:')
     st.subheader('Physiotherapy:')
     st.write('query cervical dysfunction, query vestibular dysfunction, query autonomic dysfunction')
     st.subheader('Neuropsychology:')
@@ -290,22 +277,27 @@ if pred == 3:
     st.write('query ADLs function in school, work, home')
 
 if pred == 4: 
-    percentage = counter/10.0 * 100.
-    st.subheader('Very Severe concussion')
-    st.write('to a 96'  + '%  confidence interval.')
+    
+    st.markdown("<h1 style='text-align: center; color: black;'>Very Complex</h1>", unsafe_allow_html=True)
+    #st.subheader('Very Severe concussion')
+    #st.write('to a 96'  + '%  confidence interval.')
    
-    st.write('This concussion type is characterized by having the following high, medium, and low critical areas')
+    st.write('This type of concussion complexity most often demonstrates with the following critical areas:')
     st.markdown(
     '''<span style="color:red">
-    Highly Critical Areas: pain, mobility, mood, cognition, sleep, memory, visual motor speed, reaction time, dizziness,fatigue 
+    High Critical Areas: Pain, Mobility, Mood, Cognition, Sleep, Memory, Visual Motor Speed, Reaction Time, Dizziness,Fatigue 
     </span>
     ''',
     unsafe_allow_html=True
 )
+    link = '[Advanced Concussion Team](https://www.advanceconcussion.com)'
+    st.markdown('These critical areas are some of the aspects that your '+ link +' will assess, treat and recover:', unsafe_allow_html=True)
 
-    st.header('Treatment recommended for this specific concussion sub-type includes:')
+    st.header('For Your Family Doctor: Treatment Recommendations:')
+    st.write('Your patient has completed the ConcussionRx, a clinical screening tool that evaluates the complexity of their concussion and accordingly, the required interdisplinary team needed to optimize patient treatment and recovery.')
+    st.write('This approach to concussion classification was developed through an artificial intelligence approach. Using robust statistical analyses, a 95% confidence interval and expert clinical and research consensus, your patient requires the following interdisciplinary team:')
     st.write('Physiotherapy,occupational therapy,kinesiology, counseling, neuropsychology')
-    st.write('Based on your ConcussionRX results, the following assessments are recommended:')
+    st.write('The following assessments from each clinician are required:')
     st.subheader('Physiotherapy:')
     st.write('query cervical dysfunction, query occulormotor dysfunction, query vestibular dysfunction, query autonomic dysfunction')
     st.subheader('Neuropsychology:')
@@ -327,29 +319,15 @@ if pred == 4:
 st.header('Patient Summary')
 #st.write(df)
 
-st.subheader('Visual and Movement')
+st.subheader('Balance and Movement')
 fig = go.Figure()
 
 fig.add_trace(go.Indicator(
-    mode = "number+delta",
-    value = dfnew['Reaction Time Composite Score'].values[0],
-    domain = {'row': 0, 'column': 0}))
-
-fig.add_trace(go.Indicator(
-    mode = "number+gauge+delta",
-    gauge = {'shape': "bullet"},
-    delta = {'reference': 30},
-    value = dfnew['Visual Motor Speed Composite'].values[0],
-    #domain = {'x': [0.1, 1], 'y': [0.2, 0.9]},
-    title = {'text': "Visual Motor Speed", 'font': {'size': 12}},domain = {'row': 0, 'column': 1}))
-
-fig.add_trace(go.Indicator(
     value = dfnew['DHI Total'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Dizziness", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -361,11 +339,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Physical Function and Mobility Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Physical Mobility", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -378,13 +355,12 @@ fig.add_trace(go.Indicator(
 
 
 fig.update_layout(
-    width = 760, 
-    height = 500,
-    grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
+    width = 700, 
+    height = 700,
+    grid = {'rows': 1, 'columns': 2, 'pattern': "independent"},
     template = {'data' : {'indicator': [{
         'title': {'text': "Reaction time "},
-        'mode' : "number+delta+gauge",
-        'delta' : {'reference': 0.67}}]
+        'mode' : "number+gauge"}]
                          }})
 
 
@@ -395,11 +371,10 @@ fig = go.Figure()
 
 fig.add_trace(go.Indicator(
     value = dfnew['Pain Interference Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Pain", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -412,11 +387,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Sleep Disturbance Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Sleep Disturbance", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -428,28 +402,13 @@ fig.add_trace(go.Indicator(
 
 
 
-fig.add_trace(go.Indicator(
-    mode = "number+delta",
-    value = dfnew1['Headache Hx (0/1)\nno=0\nyes=1'].values[0],
-    domain = {'row': 1, 'column': 0}))
-
-fig.add_trace(go.Indicator(
-    mode = "number+delta",
-    title = {'text': "Migraine"},
-    value = dfnew1['Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)'].values[0],
-    domain = {'row': 1, 'column': 1}))
-
-
-
-
 fig.update_layout(
     width = 700, 
-    height = 500,
-    grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
+    height = 700,
+    grid = {'rows': 1, 'columns': 2, 'pattern': "independent"},
     template = {'data' : {'indicator': [{
         'title': {'text': "Headache"},
-        'mode' : "number+delta+gauge",
-        'delta' : {'reference': 0.0}}]
+        'mode' : "number+gauge"}]
                          }})
 
 
@@ -462,11 +421,10 @@ fig = go.Figure()
 
 fig.add_trace(go.Indicator(
     value = dfnew['Memory Composite (Verbal) Score'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Verbal Memory", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -479,11 +437,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Cognitive Function Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Cognitive Impairment", 'font': {'size': 14}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -493,15 +450,26 @@ fig.add_trace(go.Indicator(
             {'range': [60,100], 'color': 'red'}]},
     domain = {'row': 0, 'column': 1}))
 
+fig.add_trace(go.Indicator(
+    mode = "number",
+    value = dfnew['Reaction Time Composite Score'].values[0],
+    domain = {'row': 1, 'column': 0}))
+
+fig.add_trace(go.Indicator(
+    mode = "number+gauge",
+    gauge = {'shape': "bullet"},
+    value = dfnew['Visual Motor Speed Composite'].values[0],
+    #domain = {'x': [0.1, 1], 'y': [0.2, 0.9]},
+    title = {'text': "Visual Motor Speed", 'font': {'size': 10}},domain = {'row': 1, 'column': 1}))
+
 
 fig.update_layout(
     width = 700, 
-    height = 400,
-    grid = {'rows': 1, 'columns': 2, 'pattern': "independent"},
+    height = 700,
+    grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
     template = {'data' : {'indicator': [{
         'title': {'text': "Speed"},
-        'mode' : "number+delta+gauge",
-        'delta' : {'reference': 90}}]
+        'mode' : "number+gauge"}]
                          }})
 
 st.plotly_chart(fig)
@@ -514,11 +482,10 @@ fig = go.Figure()
 
 fig.add_trace(go.Indicator(
     value = dfnew['Fatigue Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Fatigue", 'font': {'size': 12}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -532,11 +499,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Anxiety Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Anxiety", 'font': {'size': 14}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -548,11 +514,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Depression Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Depression", 'font': {'size': 14}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -564,11 +529,10 @@ fig.add_trace(go.Indicator(
 
 fig.add_trace(go.Indicator(
     value = dfnew['Ability to Participate in Social Roles Percentile'].values[0],
-    delta = {'reference': 0},
     title = {'text': "Social Life", 'font': {'size': 14}},
     gauge = {
         'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-        'bar': {'color': "darkblue"},
+        'bar': {'color': "white"},
         'bgcolor': "white",
         'borderwidth': 2,
         'bordercolor': "gray",
@@ -581,17 +545,16 @@ fig.add_trace(go.Indicator(
 
 fig.update_layout(
     width = 700, 
-    height = 600,
+    height = 700,
     grid = {'rows': 2, 'columns': 2, 'pattern': "independent"},
     template = {'data' : {'indicator': [{
         'title': {'text': "Speed"},
-        'mode' : "number+delta+gauge",
-        'delta' : {'reference': 90}}]
+        'mode' : "number+gauge"}]
                          }})
 
 st.plotly_chart(fig)
 
-st.header('Patient Progress')
+st.header('Status and Patient Progress')
 
 outcomes = pd.read_csv('OutcomeMeasures.csv')
 dataset_client = outcomes.loc[outcomes['Client Number'] == clientnumber]
@@ -644,6 +607,10 @@ ax[3].set_ylabel('Movement')
 
 
 st.write(fig)
+
+
+
+
 
 
 
