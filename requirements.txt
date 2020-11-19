@@ -4,4 +4,8 @@ sklearn
 plotly
 numpy
 seaborn
-joblib 
+joblib
+enum
+array
+html_utils
+complexities
