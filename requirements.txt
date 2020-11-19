@@ -5,7 +5,3 @@ plotly
 numpy
 seaborn
 joblib
-enum
-array
-html_utils
-complexities
