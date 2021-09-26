@@ -136,7 +136,7 @@ experimentids = dataset['Experiment ID'].values
 combined = dataset[['Experiment ID','Headache Hx (0/1)\nno=0\nyes=1','Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)','Pain Interference Percentile','Pain Intensity','Physical Function and Mobility Percentile','Anxiety Percentile','Depression Percentile','DHI Total', 'DHI Functional','Visual Motor Speed Composite','Reaction Time Composite Score','Memory Composite (Verbal) Score','Sleep Disturbance Percentile','Ability to Participate in Social Roles Percentile','Cognitive Function Percentile','Fatigue Percentile']]
 dfnew1 = combined.loc[combined['Experiment ID'] == experimentid]
 dfnew = dfnew1.drop(columns = ['Experiment ID','Headache Hx (0/1)\nno=0\nyes=1','Migrain Hx (None 0; Personal 1; Family 2; Personal and Family 3)'])
-#st.write(dfnew)
+st.write(dfnew)
 #iris = datasets.load_iris()
 training_dataset = pd.read_csv('fulltraining.csv')
 Y = training_dataset['cluster'] 
