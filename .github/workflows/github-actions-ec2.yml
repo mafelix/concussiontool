@@ -1,23 +1,27 @@
 name: Push-to-EC2
 
+# Trigger deployment only on push to gitaction-dev branch
 on:
   push:
     branches:
-      -gitaction-dev
+      - gitaction-dev
 
 jobs:
   deploy:
     name: Deploy to EC2 on gitaction-dev branch
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
-  steps:
-      name: Checkout the files
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
 
-      name: Deploy to ec2
-      uses: easingthemes/ssh-deploy@main
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        REMOTE_HOST: ${{ secrets.HOST_DNS }}
-        REMOTE_USER: ${{ secrets.USERNAME }}
-        TARGET: ${{ secrets.TARGET_DIR }}
+      - name: Deploy to ec2
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET_DIR }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          
+          
