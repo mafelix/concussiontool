@@ -1,7 +1,7 @@
 streamlit
 panda
-sklearn
+scikit-learn==0.21.3
 plotly
 numpy
 seaborn
-joblib
+joblib==1.2.0

@@ -20,4 +20,4 @@ class CritialAreas(Enum):
     """
     @staticmethod
     def toHtmlList(critical_areas):
-        return ToHtmlList(map(lambda myenum : myenum.value, critical_areas))
+        return ToHtmlList([myenum.value for myenum in critical_areas])
