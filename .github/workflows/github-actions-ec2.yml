@@ -24,7 +24,7 @@ jobs:
           script: |
               cd ${{ secrets.TARGET_DIR }}
               git fetch
-              git reset --hard gitaction-dev
+              git reset --hard origin/gitaction-dev
               pip install -U -r requirements.txt
               tmux kill-session
               tmux new -s -d streamlit
