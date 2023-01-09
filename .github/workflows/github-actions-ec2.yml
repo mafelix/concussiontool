@@ -23,13 +23,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.TARGET_DIR }}
-            git pull
+            git fetch
             git reset --hard origin/gitaction-dev
             pip install -U -r requirements.txt
-            tmux kill-session
-            tmux new -s last
-            streamlit run streamtest_2.py
-            exit 0
             echo ("finished!")
             exit 0
             
