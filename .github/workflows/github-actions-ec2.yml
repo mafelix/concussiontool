@@ -24,11 +24,11 @@ jobs:
           script: |
             cd ${{ secrets.TARGET_DIR }}
             git fetch
-            git reset --hard origin/gitaction-dev
+            git reset --hard origin/${{ secrets.TARGET_BRANCH }}
             pip3 install -U -r requirements.txt
             killall streamlit
             tmux kill-server
             tmux new -s server -d
-            tmux send-keys -t server 'streamlit run streamtest_2.py' C-m
+            tmux send-keys -t server 'streamlit run ${{ secrets.ENTRY_FILE }}' C-m
             exit 0
             
