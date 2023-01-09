@@ -27,5 +27,8 @@ jobs:
             git reset --hard origin/gitaction-dev
             pip3 install -U -r requirements.txt
             killall streamlit
-            streamlit run streamtest_2.py
+            tmux kill-server
+            tmux new -s server -d
+            tmux send-keys -t server 'streamlit run streamtest_2.py' C-m
             exit 0
+            
