@@ -22,10 +22,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.TARGET_DIR }}
-            git fetch
-            git reset --hard origin/gitaction-dev
-            pip install -U -r requirements.txt
-            echo ("finished!")
-            exit 0
+              cd ${{ secrets.TARGET_DIR }}
+              git fetch
+              git reset --hard gitaction-dev
+              pip install -U -r requirements.txt
+              tmux kill-session
+              tmux new -s -d streamlit
+              tmux send-keys -t streamlit 'streamlit run streamtest_2.py' C-m
+              exit 0
             
