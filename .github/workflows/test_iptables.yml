@@ -1,4 +1,4 @@
-name: Check IPTables
+name: Push-to-EC2
 
 on:
   push:
@@ -18,11 +18,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            if [${{sudo iptables -C INPUT -i eth0 -p tcp --dport 80 -j ACCEPT}} == '1'] then
+            if [${{ 'sudo iptables -C INPUT -i eth0 -p tcp --dport 80 -j ACCEPT' }} == '1'] then
               echo('Opening port 80');
-              sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
+              'sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT'
             fi
-            if [${{ sudo iptables -C PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501 }} == '1'] then
+            if [${{ 'sudo iptables -C PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501' }} == '1'] then
               echo('Forwarding port 80 to 8501');
-              sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501
+              'sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501'
             fi 
