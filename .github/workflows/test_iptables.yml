@@ -1,0 +1,28 @@
+name: Check IPTables
+
+on:
+  push:
+    branches:
+      - gitaction-dev
+
+jobs:
+  deploy:
+    name: Deploy to EC2 on gitaction-dev branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Check if iptable rules are set"
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            if [${{sudo iptables -C INPUT -i eth0 -p tcp --dport 80 -j ACCEPT}} == '1'] then
+              echo('Opening port 80');
+              sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
+            fi
+            if [${{ sudo iptables -C PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501 }} == '1'] then
+              echo('Forwarding port 80 to 8501');
+              sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8501
+            fi 
